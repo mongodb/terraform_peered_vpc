@@ -6,6 +6,8 @@ variable "name" {
 
 variable "availability_zones" {
   description = "A list of availability zones to create this vpc in. Required."
+  # This variable is required but if we don't put a blank list in here
+  # Terraform is very unhappy when we try to "iterate" it with count etc.
   default     = []
 }
 
@@ -20,7 +22,7 @@ variable "instance_tenancy" {
 
 variable "enable_dns_hostnames" {
   description = "Whether to enable dns_hostnames or not. Default: true"
-  default     = "true"
+  default     = true
 }
 
 variable "tags" {
@@ -51,7 +53,7 @@ variable "vpc_peer_connection_tags" {
 ### Subnet Vars
 
 variable "public_subnet_nat_availability_zone" {
-  description = "Which availability zone to use for the NAT subnet. Default: \"us-east-1a\""
+  description = "Which availability zone to use for the NAT subnet. Default: us-east-1a"
   default     = "us-east-1a"
 }
 

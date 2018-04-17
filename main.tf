@@ -66,7 +66,7 @@ resource "aws_vpc_peering_connection_accepter" "this_vpc_peer_accepter" {
 
 ### VPC PEER ROUTING ###
 
-# Set up routes to the internet from our new Testing VPC
+# Set up routes to the primary VPC from our new peered VPC
 resource "aws_route" "this_route_to_peer" {
   provider                  = "aws.peer"
   route_table_id            = "${aws_vpc.this.main_route_table_id}"
@@ -74,7 +74,7 @@ resource "aws_route" "this_route_to_peer" {
   vpc_peering_connection_id = "${aws_vpc_peering_connection_accepter.this_vpc_peer_accepter.id}"
 }
 
-# Set up routes to the primary VPC from our new Testing VPC
+# Set up routes to the internet from our new peered VPC
 resource "aws_route" "this_route_to_internet" {
   provider                  = "aws.peer"
   route_table_id            = "${aws_vpc.this.main_route_table_id}"
