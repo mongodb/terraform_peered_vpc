@@ -38,42 +38,6 @@ resource "aws_subnet" "this_public_subnet" {
   tags = "${merge(var.public_subnet_tags, var.tags, map("Name", format("%s.subnet_%s", var.name, var.availability_zones[count.index])))}"
 }
 
-### SETUP VPC PEERING ###
-
-data "aws_caller_identity" "peer" {
-  provider = "aws.peer"
-}
-
-# Create the peering connection in the primary account
-resource "aws_vpc_peering_connection" "this_vpc_peer" {
-  provider      = "aws.primary"
-  vpc_id        = "${var.peer_vpc_id}"
-  peer_vpc_id   = "${aws_vpc.this.id}"
-  peer_owner_id = "${data.aws_caller_identity.peer.account_id}"
-  auto_accept   = false
-
-  tags = "${merge(var.vpc_peer_connection_tags, var.tags, map("Side", "Requester"), map("Name", format("%s.peer_to_%s", var.name, var.peer_vpc_id)))}"
-}
-
-# Accept the peering connection request in peer account
-resource "aws_vpc_peering_connection_accepter" "this_vpc_peer_accepter" {
-  provider                  = "aws.peer"
-  vpc_peering_connection_id = "${aws_vpc_peering_connection.this_vpc_peer.id}"
-  auto_accept               = true
-
-  tags = "${merge(var.vpc_peer_connection_tags, var.tags, map("Side", "Accepter"), map("Name", format("%s.peer_to_%s", var.peer_vpc_id, var.name)))}"
-}
-
-### VPC PEER ROUTING ###
-
-# Set up routes to the primary VPC from our new peered VPC
-resource "aws_route" "this_route_to_peer" {
-  provider                  = "aws.peer"
-  route_table_id            = "${aws_vpc.this.main_route_table_id}"
-  destination_cidr_block    = "${var.peer_cidr_block}"
-  vpc_peering_connection_id = "${aws_vpc_peering_connection_accepter.this_vpc_peer_accepter.id}"
-}
-
 # Set up routes to the internet from our new peered VPC
 resource "aws_route" "this_route_to_internet" {
   provider                  = "aws.peer"
@@ -82,10 +46,44 @@ resource "aws_route" "this_route_to_internet" {
   gateway_id                = "${aws_internet_gateway.this_inet_gw.id}"
 }
 
-# Set up routes to the peer VPC from the primary VPC
-resource "aws_route" "this_route_from_peer" {
-  provider                  = "aws.primary"
-  route_table_id            = "${var.peer_route_table}"
-  destination_cidr_block    = "${var.cidr_block}"
-  vpc_peering_connection_id = "${aws_vpc_peering_connection.this_vpc_peer.id}"
+### SETUP VPC PEERING ###
+
+module "this_vpc_peer" {
+  source = "./peer_connection"
+
+  providers = {
+    "aws.primary" = "aws.primary"
+    "aws.peer"    = "aws.peer"
+  }
+
+  name = "${var.name}"
+  primary_vpc_id = "${var.peer_vpc_id}"
+  peer_vpc_id = "${aws_vpc.this.id}"
+  tags = "${var.tags}"
+  vpc_peer_connection_tags = "${var.vpc_peer_connection_tags}"
+}
+
+### VPC PEER ROUTING ###
+
+module "this_peering_routes" {
+  source = "./peer_routing"
+
+  providers = {
+    "aws.primary" = "aws.primary"
+    "aws.peer"    = "aws.peer"
+  }
+
+  # The way the sub module and this parent one refer to "primary" and
+  # "peer" is reversed since the perspective is a little different.
+  primary_route_table_id            = "${var.peer_route_table}"
+  peer_route_table_id               = "${aws_vpc.this.main_route_table_id}"
+
+  # CIDR Block for the existing VPC we want to peer to
+  primary_cidr_block = "${var.peer_cidr_block}"
+
+  # CIDR Block for the VPC we just created
+  peer_cidr_block = "${var.cidr_block}"
+
+  primary_vpc_peering_connection_id = "${module.this_vpc_peer.peering_connection_accepter_id}"
+  peer_vpc_peering_connection_id = "${module.this_vpc_peer.peering_connection_id}"
 }

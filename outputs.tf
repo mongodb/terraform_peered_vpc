@@ -6,10 +6,6 @@ output "vpc_id" {
   value = "${aws_vpc.this.id}"
 }
 
-output "vpc_owner_id" {
-  value = "${data.aws_caller_identity.peer.account_id}"
-}
-
 output "inet_gw_id" {
   value = "${aws_internet_gateway.this_inet_gw.id}"
 }
