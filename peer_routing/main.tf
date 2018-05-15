@@ -4,7 +4,7 @@
 resource "aws_route" "route_to_primary_from_peer" {
   provider                  = "aws.peer"
   route_table_id            = "${var.peer_route_table_id}"
-  destination_cidr_block    = "${var.peer_cidr_block}"
+  destination_cidr_block    = "${var.primary_cidr_block}"
   vpc_peering_connection_id = "${var.peer_vpc_peering_connection_id}"
 }
 
@@ -12,6 +12,6 @@ resource "aws_route" "route_to_primary_from_peer" {
 resource "aws_route" "route_to_peer_from_primary" {
   provider                  = "aws.primary"
   route_table_id            = "${var.primary_route_table_id}"
-  destination_cidr_block    = "${var.primary_cidr_block}"
+  destination_cidr_block    = "${var.peer_cidr_block}"
   vpc_peering_connection_id = "${var.primary_vpc_peering_connection_id}"
 }

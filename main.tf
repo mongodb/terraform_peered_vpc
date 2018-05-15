@@ -57,8 +57,14 @@ module "this_vpc_peer" {
   }
 
   name = "${var.name}"
+
+  # The way the sub module and this parent one refer to "primary" and
+  # "peer" is reversed since the perspective is a little different.
+  # The peer_vpc_id is the vpc that we want to peer our created one to
+  # so it's the VPC in the "primary" AWS account.
   primary_vpc_id = "${var.peer_vpc_id}"
   peer_vpc_id = "${aws_vpc.this.id}"
+
   tags = "${var.tags}"
   vpc_peer_connection_tags = "${var.vpc_peer_connection_tags}"
 }
@@ -75,7 +81,7 @@ module "this_peering_routes" {
 
   # The way the sub module and this parent one refer to "primary" and
   # "peer" is reversed since the perspective is a little different.
-  primary_route_table_id            = "${var.peer_route_table}"
+  primary_route_table_id            = "${var.peer_route_table_id}"
   peer_route_table_id               = "${aws_vpc.this.main_route_table_id}"
 
   # CIDR Block for the existing VPC we want to peer to
