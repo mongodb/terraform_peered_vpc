@@ -70,6 +70,6 @@ variable "peer_cidr_block" {
   description = "What CIDR block the peer VPC uses."
 }
 
-variable "peer_route_table" {
+variable "peer_route_table_id" {
   description = "What route to add the Peering route table to."
 }
