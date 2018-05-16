@@ -22,8 +22,8 @@ output "peer_vpc_id" {
   value = "${var.peer_vpc_id}"
 }
 
-output "peer_route_table" {
-  value = "${var.peer_route_table}"
+output "peer_route_table_id" {
+  value = "${var.peer_route_table_id}"
 }
 
 output "cidr_block" {
