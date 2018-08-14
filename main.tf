@@ -40,10 +40,10 @@ resource "aws_subnet" "this_public_subnet" {
 
 # Set up routes to the internet from our new peered VPC
 resource "aws_route" "this_route_to_internet" {
-  provider                  = "aws.peer"
-  route_table_id            = "${aws_vpc.this.main_route_table_id}"
-  destination_cidr_block    = "0.0.0.0/0"
-  gateway_id                = "${aws_internet_gateway.this_inet_gw.id}"
+  provider               = "aws.peer"
+  route_table_id         = "${aws_vpc.this.main_route_table_id}"
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = "${aws_internet_gateway.this_inet_gw.id}"
 }
 
 ### SETUP VPC PEERING ###
@@ -63,9 +63,10 @@ module "this_vpc_peer" {
   # The peer_vpc_id is the vpc that we want to peer our created one to
   # so it's the VPC in the "primary" AWS account.
   primary_vpc_id = "${var.peer_vpc_id}"
+
   peer_vpc_id = "${aws_vpc.this.id}"
 
-  tags = "${var.tags}"
+  tags                     = "${var.tags}"
   vpc_peer_connection_tags = "${var.vpc_peer_connection_tags}"
 }
 
@@ -81,8 +82,9 @@ module "this_peering_routes" {
 
   # The way the sub module and this parent one refer to "primary" and
   # "peer" is reversed since the perspective is a little different.
-  primary_route_table_id            = "${var.peer_route_table_id}"
-  peer_route_table_id               = "${aws_vpc.this.main_route_table_id}"
+  primary_route_table_id = "${var.peer_route_table_id}"
+
+  peer_route_table_id = "${aws_vpc.this.main_route_table_id}"
 
   # CIDR Block for the existing VPC we want to peer to
   primary_cidr_block = "${var.peer_cidr_block}"
@@ -91,5 +93,5 @@ module "this_peering_routes" {
   peer_cidr_block = "${var.cidr_block}"
 
   primary_vpc_peering_connection_id = "${module.this_vpc_peer.peering_connection_accepter_id}"
-  peer_vpc_peering_connection_id = "${module.this_vpc_peer.peering_connection_id}"
+  peer_vpc_peering_connection_id    = "${module.this_vpc_peer.peering_connection_id}"
 }
