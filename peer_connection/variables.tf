@@ -14,7 +14,6 @@ variable "vpc_peer_connection_tags" {
   default     = {}
 }
 
-
 variable "primary_vpc_id" {
   description = "The primary account VPC ID"
 }

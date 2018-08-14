@@ -6,9 +6,10 @@ variable "name" {
 
 variable "availability_zones" {
   description = "A list of availability zones to create this vpc in. Required."
+
   # This variable is required but if we don't put a blank list in here
   # Terraform is very unhappy when we try to "iterate" it with count etc.
-  default     = []
+  default = []
 }
 
 variable "cidr_block" {
