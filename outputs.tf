@@ -14,8 +14,8 @@ output "name" {
   value = "${var.name}"
 }
 
-output "peer_cidr_block" {
-  value = "${var.peer_cidr_block}"
+output "peer_cidr_blocks" {
+  value = "${var.peer_cidr_blocks}"
 }
 
 output "peer_vpc_id" {
