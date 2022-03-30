@@ -2,8 +2,9 @@ variable "primary_route_table_id" {
   description = "Route table id for the primary VPC"
 }
 
-variable "primary_cidr_block" {
-  description = "CIDR Block for the primary VPC"
+variable "primary_cidr_blocks" {
+  default     = []
+  description = "CIDR Blocks for the primary VPC"
 }
 
 variable "peer_route_table_id" {

@@ -67,8 +67,9 @@ variable "peer_vpc_id" {
   description = "What VPC to peer this VPC with."
 }
 
-variable "peer_cidr_block" {
-  description = "What CIDR block the peer VPC uses."
+variable "peer_cidr_blocks" {
+  default     = []
+  description = "What CIDR blocks the peer VPC uses."
 }
 
 variable "peer_route_table_id" {

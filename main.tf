@@ -86,8 +86,8 @@ module "this_peering_routes" {
 
   peer_route_table_id = "${aws_vpc.this.main_route_table_id}"
 
-  # CIDR Block for the existing VPC we want to peer to
-  primary_cidr_block = "${var.peer_cidr_block}"
+  # CIDR Blocks for the existing VPC we want to peer to
+  primary_cidr_blocks = "${var.peer_cidr_blocks}"
 
   # CIDR Block for the VPC we just created
   peer_cidr_block = "${var.cidr_block}"

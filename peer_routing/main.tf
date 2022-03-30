@@ -2,9 +2,11 @@
 
 # Set up routes to the primary VPC from our new peered VPC
 resource "aws_route" "route_to_primary_from_peer" {
-  provider                  = "aws.peer"
+  provider = "aws.peer"
+  count    = "${length(var.primary_cidr_blocks)}"
+
   route_table_id            = "${var.peer_route_table_id}"
-  destination_cidr_block    = "${var.primary_cidr_block}"
+  destination_cidr_block    = "${var.primary_cidr_blocks[count.index]}"
   vpc_peering_connection_id = "${var.peer_vpc_peering_connection_id}"
 }
 
