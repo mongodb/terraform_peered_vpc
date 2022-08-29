@@ -3,29 +3,29 @@ output "public_subnets" {
 }
 
 output "vpc_id" {
-  value = "${aws_vpc.this.id}"
+  value = aws_vpc.this.id
 }
 
 output "inet_gw_id" {
-  value = "${aws_internet_gateway.this_inet_gw.id}"
+  value = aws_internet_gateway.this_inet_gw.id
 }
 
 output "name" {
-  value = "${var.name}"
+  value = var.name
 }
 
 output "peer_cidr_blocks" {
-  value = "${var.peer_cidr_blocks}"
+  value = var.peer_cidr_blocks
 }
 
 output "peer_vpc_id" {
-  value = "${var.peer_vpc_id}"
+  value = var.peer_vpc_id
 }
 
 output "peer_route_table_id" {
-  value = "${var.peer_route_table_id}"
+  value = var.peer_route_table_id
 }
 
 output "cidr_block" {
-  value = "${var.cidr_block}"
+  value = var.cidr_block
 }
