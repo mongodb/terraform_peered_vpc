@@ -21,3 +21,4 @@ variable "primary_vpc_id" {
 variable "peer_vpc_id" {
   description = "The peer account VPC ID"
 }
+

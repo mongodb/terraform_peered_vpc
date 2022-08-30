@@ -22,3 +22,4 @@ variable "primary_vpc_peering_connection_id" {
 variable "peer_vpc_peering_connection_id" {
   description = "The peering connection for the peer account"
 }
+
