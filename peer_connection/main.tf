@@ -1,11 +1,3 @@
-provider "aws" {
-  alias = "primary"
-}
-
-provider "aws" {
-  alias = "peer"
-}
-
 ### Setup VPC Peering Connection
 
 data "aws_caller_identity" "peer" {

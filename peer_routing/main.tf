@@ -1,11 +1,3 @@
-provider "aws" {
-  alias = "primary"
-}
-
-provider "aws" {
-  alias = "peer"
-}
-
 ### VPC PEER ROUTING ###
 
 # Set up routes to the primary VPC from our new peered VPC
